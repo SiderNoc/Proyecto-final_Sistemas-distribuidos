@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .admin-link { background-color: #ffc107; padding: 10px; border-radius: 5px; display: inline-block; margin-top: 15px; }
+        .admin-link a { color: #333; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+<h1>Bienvenido a la tienda</h1>
+
+<p>Has iniciado sesión correctamente.</p>
+
+<div sec:authorize="hasRole('ADMIN')" class="admin-link">
+    <a th:href="@{/admin/productos}">Gestionar Productos</a>
+</div>
+
+<form th:action="@{/logout}" method="post" style="margin-top: 20px;">
+    <button type="submit">Cerrar sesión</button>
+</form>
+</body>
+</html>

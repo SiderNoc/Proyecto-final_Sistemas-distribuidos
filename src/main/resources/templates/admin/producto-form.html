@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">Formulario de Producto</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .container { width: 50%; margin: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group textarea { min-height: 80px; }
+        .error-message { color: red; font-size: 0.9em; }
+        .button-bar { margin-top: 20px; }
+        .button-bar button, .button-bar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .button-bar button[type="submit"] { background-color: #007bff; color: white; border: none; cursor: pointer; }
+        .button-bar a { background-color: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 th:text="${pageTitle}">Formulario de Producto</h1>
+
+    <form th:action="@{/admin/productos/guardar}" th:object="${producto}" method="post">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}" />
+            <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="error-message">Error en el nombre</div>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" th:field="*{descripcion}"></textarea>
+            <div th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" class="error-message">Error en la descripción</div>
+        </div>
+
+        <div class="form-group">
+            <label for="precio">Precio:</label>
+            <input type="number" id="precio" th:field="*{precio}" step="0.01" min="0.01" />
+            <div th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}" class="error-message">Error en el precio</div>
+        </div>
+
+        <div class="form-group">
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" th:field="*{stock}" min="0" />
+            <div th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="error-message">Error en el stock</div>
+        </div>
+
+        <div class="button-bar">
+            <button type="submit">Guardar Producto</button>
+            <a th:href="@{/admin/productos}">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
