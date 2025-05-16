@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Nuestra Tienda</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding:0; background-color: #f8f9fa; color: #333; }
+    .page-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    h1, h2 { color: #333; }
+
+        /* Estilos de Navegación */
+        nav {
+            background-color: #fff;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e7e7e7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        nav .links-izquierda a, nav .links-derecha a, nav .links-derecha form button {
+            margin-left: 15px; /* Invertido para que el primer link de la izquierda no tenga margen */
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1em;
+        }
+        nav .links-izquierda a:first-child { margin-left: 0; } /* Sin margen para el primer elemento a la izquierda */
+        nav .links-derecha form { display: inline; margin: 0; padding: 0; }
+        nav .links-derecha form button {
+            background: none;
+            border: none;
+            color: #dc3545; /* Color rojo para logout */
+            cursor: pointer;
+            padding: 0;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        nav .links-derecha form button:hover { text-decoration: underline; }
+        nav .links-derecha a:hover { text-decoration: underline; }
+        nav .links-derecha .admin-link a { color: #ffc107; } /* Color distintivo para admin */
+        nav .links-derecha .user-greeting { margin-left: 15px; color: #555; }
+        nav .links-derecha .register-link { color: #28a745; } /* Color verde para registrarse */
+
+        /* Estilos de Productos */
+        .product-grid { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; }
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: calc(33.333% - 25px); /* Para 3 tarjetas por fila, ajusta según el gap */
+            min-width: 280px; /* Ancho mínimo para tarjetas */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.3s ease;
+        }
+        .product-card:hover { box-shadow: 0 6px 12px rgba(0,0,0,0.12); }
+        .product-card img { max-width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 15px;}
+        .product-card h3 { margin-top: 0; font-size: 1.3em; color: #343a40; }
+        .product-card p { font-size: 0.95em; color: #6c757d; flex-grow: 1; margin-bottom: 15px; }
+        .product-card .price { font-weight: bold; color: #007bff; margin-bottom: 10px; font-size: 1.2em; }
+        .product-card .stock { font-size: 0.9em; color: #555; margin-bottom: 15px; }
+        .product-card form { margin-top: auto; }
+        .add-to-cart-button {
+            display: block; width:100%; padding: 10px 15px;
+            background-color: #007bff; color: white; text-decoration: none;
+            border-radius: 5px; border: none; cursor: pointer; font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .add-to-cart-button:hover { background-color: #0056b3; }
+        .out-of-stock { color: #dc3545; margin-top: auto; text-align: center; padding: 10px 0; font-weight: bold; }
+
+        /* Estilos de Alertas */
+        .alert { padding: 12px 18px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; font-size: 1em;}
+        .alert-success { color: #0f5132; background-color: #d1e7dd; border-color: #badbcc; }
+        .alert-danger { color: #842029; background-color: #f8d7da; border-color: #f5c2c7; }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="links-izquierda">
+    <a th:href="@{/tienda}">Tienda</a>
+  </div>
+  <div class="links-derecha">
+    <a th:href="@{/carrito}">Carrito (<span th:text="${@carritoServicio.getNumeroDeItems() ?: 0}">0</span>)</a>
+
+    <th:block sec:authorize="isAuthenticated()">
+      <span class="user-greeting" sec:authentication="name">Usuario</span>
+
+      <span sec:authorize="hasRole('ADMIN')" class="admin-link">
+                <a th:href="@{/admin/productos}">Gestionar Productos</a>
+            </span>
+
+      <form th:action="@{/logout}" method="post">
+        <button type="submit">Cerrar Sesión</button>
+      </form>
+    </th:block>
+
+    <a sec:authorize="isAnonymous()" th:href="@{/login}">Iniciar Sesión</a>
+    <a sec:authorize="isAnonymous()" th:href="@{/registro}" class="register-link">Registrarse</a>
+  </div>
+</nav>
+<div class="page-container">
+  <h1>Productos Disponibles</h1>
+
+  <div th:if="${mensajeExitoCarrito}" class="alert alert-success" th:text="${mensajeExitoCarrito}"></div>
+  <div th:if="${mensajeErrorCarrito}" class="alert alert-danger" th:text="${mensajeErrorCarrito}"></div>
+
+  <div th:if="${productos == null || productos.isEmpty()}">
+    <p>Actualmente no hay productos disponibles en la tienda.</p>
+  </div>
+
+  <div class="product-grid" th:unless="${productos == null || productos.isEmpty()}">
+    <div class="product-card" th:each="producto : ${productos}">
+      <h3><a th:href="@{/producto/{id}(id=${producto.id})}" th:text="${producto.nombre}" style="text-decoration:none; color:inherit;">Nombre del Producto</a></h3>
+      <p th:text="${producto.descripcion != null && producto.descripcion.length() > 80 ? #strings.substring(producto.descripcion, 0, 80) + '...' : producto.descripcion}">Descripción breve...</p>
+      <div class="price" th:text="'Precio: ' + ${#numbers.formatCurrency(producto.precio)}">Precio: S/0.00</div>
+      <div class="stock" th:text="'Stock: ' + ${producto.stock}">Stock: 0</div>
+
+      <form th:action="@{/carrito/agregar/{id}(id=${producto.id})}" method="post" th:if="${producto.stock > 0}">
+        <input type="hidden" name="cantidad" value="1" />
+        <button type="submit" class="add-to-cart-button">Añadir al Carrito</button>
+      </form>
+      <div th:if="${producto.stock <= 0}" class="out-of-stock">Agotado</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

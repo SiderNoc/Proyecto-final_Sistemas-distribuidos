@@ -1,5 +1,7 @@
 package com.sider.tienda.configuracion;
 
+
+
 import com.sider.tienda.servicio.DetallesUsuarioServicio;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,6 @@ public class SecurityConfig {
 
     private final DetallesUsuarioServicio detallesUsuarioServicio;
 
-    // Inyección vía constructor (recomendada)
     public SecurityConfig(DetallesUsuarioServicio detallesUsuarioServicio) {
         this.detallesUsuarioServicio = detallesUsuarioServicio;
     }
@@ -39,7 +40,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                        // URLs públicas: login, recursos estáticos y nuestra nueva página de tienda
+                        .requestMatchers("/login", "/css/**", "/js/**", "/tienda", "/registro", "/").permitAll()
+                        // Las rutas de admin ya están protegidas a nivel de método en ProductoControlador
+                        // con @PreAuthorize("hasRole('ADMIN')").
+                        // Para cualquier otra petición, el usuario debe estar autenticado.
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login

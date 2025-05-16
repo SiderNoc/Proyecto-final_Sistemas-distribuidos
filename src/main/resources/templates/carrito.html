@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tu Carrito de Compras</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .container { max-width: 960px; margin: auto; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        td.actions form { display: inline-block; margin-right: 5px;}
+        td.actions button, td.actions a { padding: 6px 10px; font-size:0.9em; }
+        input[type="number"] { width: 60px; padding: 5px; }
+        .cart-summary { text-align: right; margin-bottom: 20px; }
+        .cart-summary h3 { margin: 0 0 10px 0; }
+        .cart-actions a, .cart-actions form button {
+            text-decoration: none; padding: 10px 15px; border-radius: 5px;
+            margin-right: 10px; display:inline-block;
+        }
+        .continue-shopping { background-color: #6c757d; color: white; border:none;}
+        .clear-cart button { background-color: #dc3545; color: white; border: none; cursor:pointer; }
+        .checkout-button { background-color: #28a745; color: white; border:none;}
+        nav { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        nav a { margin-right: 15px; text-decoration: none; color: #007bff; font-weight: bold; }
+        .alert { padding: 10px; margin-bottom: 15px; border: 1px solid transparent; border-radius: 4px; font-size: 0.9em;}
+        .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+        .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a th:href="@{/}">Inicio</a>
+        <a th:href="@{/tienda}">Tienda</a>
+        <a th:href="@{/carrito}" style="float: right;">Ver Carrito (<span th:text="${@carritoServicio.getNumeroDeItems() ?: 0}">0</span> items)</a>
+    </nav>
+
+    <h1>Tu Carrito de Compras</h1>
+
+    <div th:if="${mensajeExitoCarrito}" class="alert alert-success" th:text="${mensajeExitoCarrito}"></div>
+    <div th:if="${mensajeErrorCarrito}" class="alert alert-danger" th:text="${mensajeErrorCarrito}"></div>
+
+    <div th:if="${cartItems == null || cartItems.isEmpty()}">
+        <p>Tu carrito está vacío.</p>
+    </div>
+
+    <table th:unless="${cartItems == null || cartItems.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Precio Unitario</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cartItems}">
+            <td th:text="${item.producto.nombre}">Nombre del Producto</td>
+            <td th:text="${#numbers.formatCurrency(item.producto.precio)}">S/0.00</td>
+            <td>
+                <form th:action="@{/carrito/actualizar}" method="post" style="display: inline;">
+                    <input type="hidden" name="productoId" th:value="${item.producto.id}" />
+                    <input type="number" name="cantidad" th:value="${item.cantidad}" min="0" />
+                    <button type="submit" style="padding:2px 5px; font-size:0.8em;">Actualizar</button>
+                </form>
+            </td>
+            <td th:text="${#numbers.formatCurrency(item.getSubtotal())}">S/0.00</td>
+            <td class="actions">
+                <form th:action="@{/carrito/remover/{id}(id=${item.producto.id})}" method="post">
+                    <button type="submit" onclick="return confirm('¿Quitar este producto del carrito?');">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:unless="${cartItems == null || cartItems.isEmpty()}" class="cart-summary">
+        <h3>Total del Carrito: <span th:text="${#numbers.formatCurrency(totalCarrito)}">S/0.00</span></h3>
+    </div>
+
+    <div class="cart-actions">
+        <a th:href="@{/tienda}" class="continue-shopping">Continuar Comprando</a>
+        <form th:if="${not (cartItems == null || cartItems.isEmpty())}" th:action="@{/carrito/limpiar}" method="post" style="display: inline;">
+            <button type="submit" class="clear-cart" onclick="return confirm('¿Estás seguro de vaciar el carrito?');">Vaciar Carrito</button>
+        </form>
+        <a href="#" th:if="${not (cartItems == null || cartItems.isEmpty())}" class="checkout-button" style="background-color: #ccc; cursor: not-allowed;">Proceder al Pago (Próximamente)</a>
+    </div>
+</div>
+
+</body>
+</html>

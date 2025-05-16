@@ -1,10 +1,12 @@
 package com.sider.tienda;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.CommandLineRunner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 
 @SpringBootApplication
 public class TiendaApplication {
@@ -17,7 +19,7 @@ public class TiendaApplication {
 		return args -> {
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			// Para generar hashes de contraseña
-			String rawPassword = "prueba123";
+			String rawPassword = "admin123";
 			String encodedPassword = passwordEncoder.encode(rawPassword);
 
 			System.out.println("======================================================================");
@@ -26,6 +28,6 @@ public class TiendaApplication {
 			System.out.println("Copia esta contraseña hasheada para el nuevo usuario comun.");
 			System.out.println("======================================================================");
 		};
-	} */
+	}*/
 
 }
