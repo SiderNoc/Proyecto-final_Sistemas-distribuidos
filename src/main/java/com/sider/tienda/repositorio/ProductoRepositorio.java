@@ -2,7 +2,7 @@ package com.sider.tienda.repositorio;
 
 import com.sider.tienda.modelo.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository; // Es buena práctica, aunque opcional si extiendes JpaRepository
+import org.springframework.stereotype.Repository;
 
 import java.util.List; // Si quieres añadir métodos personalizados que devuelvan listas
 

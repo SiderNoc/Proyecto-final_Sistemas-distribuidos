@@ -86,7 +86,7 @@
     <a th:href="@{/tienda}">Tienda</a>
   </div>
   <div class="links-derecha">
-    <a th:href="@{/carrito}">Carrito (<span th:text="${@carritoServicio.getNumeroDeItems() ?: 0}">0</span>)</a>
+    <a th:href="@{/carrito}">Carrito (<span th:text="${cartItemCount ?: 0}">0</span>)</a>
 
     <th:block sec:authorize="isAuthenticated()">
       <span class="user-greeting" sec:authentication="name">Usuario</span>

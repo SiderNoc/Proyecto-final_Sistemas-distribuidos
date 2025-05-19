@@ -35,7 +35,7 @@
     <nav>
         <a th:href="@{/}">Inicio</a>
         <a th:href="@{/tienda}">Tienda</a>
-        <a th:href="@{/carrito}" style="float: right;">Ver Carrito (<span th:text="${@carritoServicio.getNumeroDeItems() ?: 0}">0</span> items)</a>
+        <a th:href="@{/carrito}" style="float: right;">Ver Carrito (<span th:text="${cartItemCount ?: 0}">0</span> items)</a>
     </nav>
 
     <h1>Tu Carrito de Compras</h1>
