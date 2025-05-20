@@ -1,0 +1,235 @@
+/* src/main/resources/static/css/admin.css */
+
+body {
+    /* Puedes mantener el fondo de main.css o definir uno específico para admin si quieres, ej: */
+    /* background-color: var(--color-neutral-bg); */
+}
+
+.admin-page-container {
+    max-width: 1100px;
+    margin: 30px auto; /* Margen superior/inferior y centrado */
+    padding: 25px;
+    background-color: var(--color-neutral-white);
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--box-shadow-base);
+}
+
+.admin-page-container h1 {
+    font-family: var(--font-titles); /* Russo One */
+    color: var(--color-primary-base);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 2rem; /* Un poco más pequeño que el H1 de la tienda */
+}
+
+/* Botón principal de acción en páginas de admin (ej. "Agregar Nuevo Producto") */
+.admin-action-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--color-primary-active); /* Morado activo */
+    color: var(--color-neutral-white);
+    font-family: var(--font-text);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: calc(var(--border-radius-base) / 2);
+    margin-bottom: 25px;
+    transition: background-color 0.2s ease;
+}
+.admin-action-button:hover {
+    background-color: var(--color-primary-base); /* Morado más oscuro */
+    color: var(--color-neutral-white);
+    text-decoration: none;
+}
+
+
+/* Estilos para la tabla de administración */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+    font-family: var(--font-text); /* Nunito para el contenido de la tabla */
+}
+
+.admin-table th,
+.admin-table td {
+    border: 1px solid var(--color-neutral-lightgray);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.admin-table thead th {
+    background-color: var(--color-primary-bg-ultrasoft); /* Fondo morado muy claro para encabezados */
+    color: var(--color-primary-base);
+    font-weight: 700; /* Nunito Bold */
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.admin-table tbody tr:nth-child(odd) {
+    background-color: var(--color-neutral-bg); /* Filas impares con un fondo gris suave */
+}
+.admin-table tbody tr:hover {
+    background-color: var(--color-primary-highlight); /* Un resaltado morado claro al pasar el mouse */
+}
+
+/* Enlaces de acciones dentro de la tabla */
+.admin-table .actions a,
+.admin-table .actions button { /* Si usas botones para eliminar */
+    font-size: 0.9em;
+    text-decoration: none;
+    padding: 5px 10px;
+    margin-right: 8px;
+    border-radius: calc(var(--border-radius-base) / 2);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.admin-table .actions .edit-link {
+    color: var(--color-neutral-white);
+    background-color: var(--color-primary-medium); /* Morado medio para editar */
+}
+.admin-table .actions .edit-link:hover {
+    background-color: var(--color-primary-active);
+}
+
+.admin-table .actions .delete-link, /* Si es un enlace */
+.admin-table .actions .delete-button /* Si es un botón */ {
+    color: var(--color-neutral-white);
+    background-color: #c82333; /* Un rojo para eliminar */
+    border: none; /* Si es un botón */
+    cursor: pointer; /* Si es un botón */
+}
+.admin-table .actions .delete-link:hover,
+.admin-table .actions .delete-button:hover {
+    background-color: #a71d2a; /* Rojo más oscuro */
+}
+
+/* Estilos para el pie de página de admin-lista (logout, volver a inicio) */
+.admin-page-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-neutral-lightgray);
+    text-align: center;
+    font-family: var(--font-text);
+}
+.admin-page-footer form,
+.admin-page-footer p {
+    display: inline-block;
+    margin: 0 10px;
+}
+.admin-page-footer button,
+.admin-page-footer a {
+    font-family: var(--font-text);
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: calc(var(--border-radius-base) / 2);
+    text-decoration: none;
+}
+.admin-page-footer button { /* Botón de Cerrar Sesión */
+    background-color: var(--color-neutral-medium);
+    color: var(--color-neutral-white);
+    border: none;
+}
+.admin-page-footer button:hover {
+    background-color: var(--color-neutral-dark);
+}
+.admin-page-footer a { /* Enlace Volver a Inicio */
+    background-color: var(--color-primary-bg-soft);
+    color: var(--color-primary-base);
+}
+.admin-page-footer a:hover {
+    background-color: var(--color-primary-highlight);
+}
+/* En src/main/resources/static/css/admin.css */
+/* (Añade esto a los estilos que ya tenías para .admin-page-container, .admin-table, etc.) */
+
+/* Estilos para Formularios de Administración */
+.admin-form {
+    margin-top: 20px;
+}
+
+.admin-form .form-group {
+    margin-bottom: 20px;
+}
+
+.admin-form .form-group label {
+    display: block;
+    font-family: var(--font-text); /* Nunito */
+    font-weight: 600; /* Semibold */
+    color: var(--color-neutral-medium);
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.admin-form .form-group input[type="text"],
+.admin-form .form-group input[type="number"],
+.admin-form .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    box-sizing: border-box; /* Importante para que el padding no aumente el ancho total */
+    border: 1px solid var(--color-neutral-lightgray);
+    border-radius: calc(var(--border-radius-base) / 2);
+    font-family: var(--font-text); /* Nunito */
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-form .form-group textarea {
+    min-height: 120px;
+    resize: vertical; /* Permite al usuario redimensionar verticalmente */
+}
+
+.admin-form .form-group input[type="text"]:focus,
+.admin-form .form-group input[type="number"]:focus,
+.admin-form .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary-active); /* Borde morado al enfocar */
+    box-shadow: 0 0 0 3px var(--color-primary-bg-soft); /* Sombra suave morada */
+}
+
+/* Mensajes de error de validación para campos */
+.admin-form .error-message {
+    color: #c82333; /* Un rojo para errores */
+    font-family: var(--font-text);
+    font-size: 0.85em;
+    margin-top: 5px;
+    display: block; /* Para que ocupe su propia línea */
+}
+
+/* Contenedor para los botones del formulario */
+.admin-form .button-bar {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px; /* Espacio entre botones */
+    justify-content: flex-start; /* Alinea los botones a la izquierda por defecto */
+}
+
+.admin-form .button-submit, /* Botón principal de guardado */
+.admin-form .button-cancel { /* Botón de cancelar */
+    padding: 10px 20px;
+    font-family: var(--font-text); /* Nunito */
+    font-weight: 600;
+    border-radius: calc(var(--border-radius-base) / 2);
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.admin-form .button-submit {
+    background-color: var(--color-primary-base); /* Morado principal */
+    color: var(--color-neutral-white);
+}
+.admin-form .button-submit:hover {
+    background-color: var(--color-primary-active);
+}
+
+.admin-form .button-cancel {
+    background-color: var(--color-neutral-medium); /* Gris medio */
+    color: var(--color-neutral-white);
+}
+.admin-form .button-cancel:hover {
+    background-color: var(--color-neutral-dark);
+}

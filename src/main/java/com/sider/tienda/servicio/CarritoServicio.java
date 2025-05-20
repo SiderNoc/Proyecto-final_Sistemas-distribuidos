@@ -88,23 +88,52 @@ public class CarritoServicio {
         carritoRepositorio.save(carrito); // Guardar el carrito actualizará/creará ítems por CascadeType.ALL
     }
 
+// En CarritoServicio.java
+// En CarritoServicio.java
+
     @Transactional
-    public void removerItem(String username, Integer productoId) {
+    public void removerItem(String username, Integer productoIdARemover) {
+        System.out.println("[SERVICE] Intentando remover item. Usuario: " + username + ", Producto ID a remover: " + productoIdARemover);
         Carrito carrito = getOrCreateCarritoDelUsuario(username);
 
+        if (carrito.getItems().isEmpty()) {
+            System.out.println("[SERVICE] El carrito está vacío, nada que remover.");
+            return;
+        }
+
+        // Log para ver los items actuales (puedes mantener tus logs anteriores si prefieres)
+        System.out.println("[SERVICE] Items actuales en el carrito (" + carrito.getItems().size() + ") antes de remover:");
+        carrito.getItems().forEach(item ->
+                System.out.println("  - CI_ID: " + item.getId() + ", P_ID: " + (item.getProducto() != null ? item.getProducto().getId() : "null"))
+        );
+
         Optional<CarritoItem> itemARemoverOpt = carrito.getItems().stream()
-                .filter(item -> item.getProducto().getId().equals(productoId))
+                .filter(item -> item.getProducto() != null && item.getProducto().getId().equals(productoIdARemover))
                 .findFirst();
 
         if (itemARemoverOpt.isPresent()) {
-            CarritoItem itemARemover = itemARemoverOpt.get();
-            // carrito.removeItem(itemARemover); // Esto quita de la colección en memoria
-            // carritoRepositorio.save(carrito); // Y orphanRemoval=true debería eliminarlo
-            // O, para ser más explícito y seguro con la eliminación:
-            carritoItemRepositorio.delete(itemARemover);
+            CarritoItem itemEntity = itemARemoverOpt.get();
+            System.out.println("[SERVICE] Item encontrado para remover. CarritoItem ID: " + itemEntity.getId() + ", Producto ID: " + itemEntity.getProducto().getId());
+
+            // **Este es el cambio principal: Modificar la colección y guardar el padre**
+            boolean fueRemovidoDeColeccion = carrito.getItems().remove(itemEntity);
+
+            if (fueRemovidoDeColeccion) {
+                // Opcional pero buena práctica: romper la relación desde el lado del hijo también si es bidireccional
+                // y no quieres depender enteramente de orphanRemoval para limpiar referencias en memoria.
+                // itemEntity.setCarrito(null); // Si la relación es bidireccional y JPA no lo maneja automáticamente al remover.
+
+                System.out.println("[SERVICE] Item removido de la colección en memoria. Guardando Carrito para persistir cambios...");
+                carritoRepositorio.saveAndFlush(carrito); // Guardar el padre (Carrito) debería activar orphanRemoval para el CarritoItem
+                System.out.println("[SERVICE] Carrito guardado y flusheado. El ítem debería estar eliminado de la BD.");
+            } else {
+                System.err.println("[SERVICE] FALLO: El item NO pudo ser removido de la colección en memoria del carrito. Esto es inesperado si se encontró previamente.");
+                // Si esto ocurre, podría haber un problema con cómo se compara el objeto itemEntity con los de la lista,
+                // o la lista fue modificada concurrentemente (muy improbable aquí).
+            }
+
         } else {
-            // Opcional: lanzar excepción si se intenta remover un ítem que no está.
-            System.err.println("Intento de remover ítem no existente del carrito. Producto ID: " + productoId);
+            System.err.println("[SERVICE] FALLO: No se encontró el ítem con Producto ID: " + productoIdARemover + " en el carrito del usuario " + username);
         }
     }
 

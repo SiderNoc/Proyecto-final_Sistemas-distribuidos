@@ -1,95 +1,117 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Tu Carrito de Compras</title>
-    <style>
-        body { font-family: sans-serif; margin: 20px; }
-        .container { max-width: 960px; margin: auto; }
-        h1 { color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        td.actions form { display: inline-block; margin-right: 5px;}
-        td.actions button, td.actions a { padding: 6px 10px; font-size:0.9em; }
-        input[type="number"] { width: 60px; padding: 5px; }
-        .cart-summary { text-align: right; margin-bottom: 20px; }
-        .cart-summary h3 { margin: 0 0 10px 0; }
-        .cart-actions a, .cart-actions form button {
-            text-decoration: none; padding: 10px 15px; border-radius: 5px;
-            margin-right: 10px; display:inline-block;
-        }
-        .continue-shopping { background-color: #6c757d; color: white; border:none;}
-        .clear-cart button { background-color: #dc3545; color: white; border: none; cursor:pointer; }
-        .checkout-button { background-color: #28a745; color: white; border:none;}
-        nav { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        nav a { margin-right: 15px; text-decoration: none; color: #007bff; font-weight: bold; }
-        .alert { padding: 10px; margin-bottom: 15px; border: 1px solid transparent; border-radius: 4px; font-size: 0.9em;}
-        .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
-        .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
-    </style>
+    <title>Tu Carrito de Compras - TuTienda</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Russo+One&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/carrito.css}">
 </head>
 <body>
 
-<div class="container">
-    <nav>
-        <a th:href="@{/}">Inicio</a>
-        <a th:href="@{/tienda}">Tienda</a>
-        <a th:href="@{/carrito}" style="float: right;">Ver Carrito (<span th:text="${cartItemCount ?: 0}">0</span> items)</a>
-    </nav>
+<nav>
+    <div class="links-izquierda">
+        <a th:href="@{/tienda}" class="navbar-brand">Tienda</a>
+    </div>
+    <div class="links-derecha">
+        <th:block sec:authorize="isAuthenticated()">
+                <span class="user-greeting">
+                    Bienvenid@ <th:block sec:authentication="name">Usuario</th:block>!
+                </span>
+            <a th:href="@{/carrito}" class="nav-cart-link" title="Ver Carrito">
+                <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-item-count" th:text="${cartItemCount ?: 0}" th:if="${cartItemCount > 0}">0</span>
+            </a>
+            <span sec:authorize="hasRole('ADMIN')" class="admin-link">
+                    <a th:href="@{/admin/productos}">Gestionar Productos</a>
+                </span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Cerrar Sesión</button>
+            </form>
+        </th:block>
 
+        <th:block sec:authorize="isAnonymous()">
+            <a th:href="@{/carrito}" class="nav-cart-link" title="Ver Carrito">
+                <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-item-count" th:text="${cartItemCount ?: 0}" th:if="${cartItemCount > 0}">0</span>
+            </a>
+            <a th:href="@{/login}">Iniciar Sesión</a>
+            <a th:href="@{/registro}" class="nav-button register-button">Unirme!</a>
+        </th:block>
+    </div>
+</nav>
+
+<div class="cart-page-container">
     <h1>Tu Carrito de Compras</h1>
 
     <div th:if="${mensajeExitoCarrito}" class="alert alert-success" th:text="${mensajeExitoCarrito}"></div>
     <div th:if="${mensajeErrorCarrito}" class="alert alert-danger" th:text="${mensajeErrorCarrito}"></div>
 
-    <div th:if="${cartItems == null || cartItems.isEmpty()}">
+    <div th:if="${cartItems == null || cartItems.isEmpty()}" class="empty-cart-message">
         <p>Tu carrito está vacío.</p>
+        <a th:href="@{/tienda}" class="action-button continue-shopping" style="margin-top: 20px; background-color: var(--color-primary-base); color: var(--color-neutral-white);">Ir a la Tienda</a>
     </div>
 
-    <table th:unless="${cartItems == null || cartItems.isEmpty()}">
-        <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Precio Unitario</th>
-            <th>Cantidad</th>
-            <th>Subtotal</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${cartItems}">
-            <td th:text="${item.producto.nombre}">Nombre del Producto</td>
-            <td th:text="${#numbers.formatCurrency(item.producto.precio)}">S/0.00</td>
-            <td>
-                <form th:action="@{/carrito/actualizar}" method="post" style="display: inline;">
-                    <input type="hidden" name="productoId" th:value="${item.producto.id}" />
-                    <input type="number" name="cantidad" th:value="${item.cantidad}" min="0" />
-                    <button type="submit" style="padding:2px 5px; font-size:0.8em;">Actualizar</button>
-                </form>
-            </td>
-            <td th:text="${#numbers.formatCurrency(item.getSubtotal())}">S/0.00</td>
-            <td class="actions">
-                <form th:action="@{/carrito/remover/{id}(id=${item.producto.id})}" method="post">
-                    <button type="submit" onclick="return confirm('¿Quitar este producto del carrito?');">Eliminar</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="cart-layout" th:unless="${cartItems == null || cartItems.isEmpty()}">
+        <div class="cart-items-list">
+            <div class="cart-item-card" th:each="item : ${cartItems}">
+                <div class="item-image">
+                    <img th:src="@{/images/placeholder-product.png}" alt="Imagen Producto" />
+                </div>
+                <div class="item-details">
+                    <h3 class="item-name" th:text="${item.producto.nombre}">Nombre del Producto</h3>
+                    <p class="item-price" th:text="'Precio: ' + ${#numbers.formatCurrency(item.producto.precio)}">Precio</p>
+                    <form th:action="@{/carrito/actualizar}" method="post" class="item-quantity-form">
+                        <input type="hidden" name="productoId" th:value="${item.producto.id}" />
+                        <label th:for="${'cantidad-' + item.producto.id}" class="sr-only">Cantidad:</label> <input type="number" name="cantidad" th:id="${'cantidad-' + item.producto.id}" th:value="${item.cantidad}" min="0" class="quantity-input"/>
+                        <button type="submit" class="update-quantity-btn-small">Ok</button>
+                    </form>
+                </div>
+                <div class="item-subtotal-remove">
+                    <p class="item-subtotal-text" th:text="${#numbers.formatCurrency(item.getSubtotal())}">Subtotal</p>
+                    <form th:action="@{/carrito/remover/{id}(id=${item.producto.id})}" method="post" class="remove-item-form">
+                        <button type="submit" class="remove-item-btn-small" onclick="return confirm('¿Quitar este producto del carrito?');">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-    <div th:unless="${cartItems == null || cartItems.isEmpty()}" class="cart-summary">
-        <h3>Total del Carrito: <span th:text="${#numbers.formatCurrency(totalCarrito)}">S/0.00</span></h3>
+        <div class="order-summary-sidebar">
+            <h2>Resumen del Pedido</h2>
+            <div class="summary-row">
+                <span>Subtotal (<span th:text="${cartItemCount ?: 0}">0</span> productos):</span>
+                <span th:text="${#numbers.formatCurrency(totalCarrito)}">S/0.00</span>
+            </div>
+            <hr class="summary-divider">
+            <div class="summary-row total">
+                <span>Total:</span>
+                <span th:text="${#numbers.formatCurrency(totalCarrito)}">S/0.00</span>
+            </div>
+            <form action="#" method="post">
+                <button type="submit" class="action-button checkout-btn disabled">Proceder al Pago (Próximamente)</button>
+            </form>
+        </div>
     </div>
 
-    <div class="cart-actions">
-        <a th:href="@{/tienda}" class="continue-shopping">Continuar Comprando</a>
-        <form th:if="${not (cartItems == null || cartItems.isEmpty())}" th:action="@{/carrito/limpiar}" method="post" style="display: inline;">
-            <button type="submit" class="clear-cart" onclick="return confirm('¿Estás seguro de vaciar el carrito?');">Vaciar Carrito</button>
+    <div class="cart-actions-footer" th:unless="${cartItems == null || cartItems.isEmpty()}">
+        <a th:href="@{/tienda}" class="action-button continue-shopping">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;"><path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/></svg>
+            Continuar Comprando
+        </a>
+        <form th:action="@{/carrito/limpiar}" method="post" style="display:inline-block;"> <button type="submit" class="action-button clear-cart-btn" onclick="return confirm('¿Estás seguro de vaciar el carrito?');">Vaciar Carrito</button>
         </form>
-        <a href="#" th:if="${not (cartItems == null || cartItems.isEmpty())}" class="checkout-button" style="background-color: #ccc; cursor: not-allowed;">Proceder al Pago (Próximamente)</a>
     </div>
-</div>
 
-</body>
+</div> </body>
 </html>

@@ -30,7 +30,25 @@ public class CarritoItem {
         this.producto = producto;
         this.cantidad = cantidad;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CarritoItem that = (CarritoItem) o;
+        // Compara por ID solo si ambos IDs no son nulos
+        // Si los IDs son nulos, solo son iguales si son la misma instancia (cubierto por this == o)
+        return id != null && id.equals(that.id);
+    }
 
+    @Override
+    public int hashCode() {
+        // Si el ID es nulo, usa el hashCode del objeto base.
+        // Si el ID no es nulo, usa su hashCode.
+        // Es una práctica común para entidades JPA.
+        return id != null ? id.hashCode() : super.hashCode();
+        // Alternativamente, si esperas usar entidades sin ID en un Set/Map antes de persistir:
+        // return getClass().hashCode(); // O una constante como 31 si el ID es nulo.
+    }
 
     // Getters y Setters
     public Integer getId() {

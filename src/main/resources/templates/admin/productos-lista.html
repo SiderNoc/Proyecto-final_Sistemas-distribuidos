@@ -2,62 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Productos</title>
-    <style>
-        body { font-family: sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .actions a { margin-right: 10px; text-decoration: none; }
-        .add-button { display: inline-block; padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-bottom: 20px; }
-        .alert { padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; }
-        .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
-        .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
-    </style>
+    <title>Gestión de Productos - Administración</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Russo+One&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
+<div class="admin-page-container">
+    <h1>Gestión de Productos</h1>
 
-<h1>Gestión de Productos</h1>
+    <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}" class="alert alert-danger" th:text="${mensajeError}"></div>
 
-<div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
-<div th:if="${mensajeError}" class="alert alert-danger" th:text="${mensajeError}"></div>
+    <a th:href="@{/admin/productos/nuevo}" class="admin-action-button">Agregar Nuevo Producto</a>
 
-<a th:href="@{/admin/productos/nuevo}" class="add-button">Agregar Nuevo Producto</a>
+    <div th:if="${productos == null || productos.isEmpty()}" style="text-align:center; margin-top:20px;">
+        <p>No hay productos para mostrar.</p>
+    </div>
 
-<div th:if="${productos == null || productos.isEmpty()}">
-    <p>No hay productos para mostrar.</p>
+    <table class="admin-table" th:unless="${productos == null || productos.isEmpty()}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="producto : ${productos}">
+            <td th:text="${producto.id}">1</td>
+            <td th:text="${producto.nombre}">Nombre del Producto</td>
+            <td th:text="${#numbers.formatCurrency(producto.precio)}">S/ 0.00</td>
+            <td th:text="${producto.stock}">0</td>
+            <td class="actions">
+                <a th:href="@{/admin/productos/editar/{id}(id=${producto.id})}" class="edit-link">Editar</a>
+                <a th:href="@{/admin/productos/eliminar/{id}(id=${producto.id})}"
+                   class="delete-link"
+                   onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?');">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="admin-page-footer">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Cerrar sesión</button>
+        </form>
+        <p><a th:href="@{/}">Volver a Tienda</a></p> </div>
 </div>
-
-<table th:unless="${productos == null || productos.isEmpty()}">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Stock</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="producto : ${productos}">
-        <td th:text="${producto.id}">1</td>
-        <td th:text="${producto.nombre}">Nombre del Producto</td>
-        <td th:text="${#numbers.formatCurrency(producto.precio)}">S/ 0.00</td> <td th:text="${producto.stock}">0</td>
-        <td class="actions">
-            <a th:href="@{/admin/productos/editar/{id}(id=${producto.id})}">Editar</a>
-            <a th:href="@{/admin/productos/eliminar/{id}(id=${producto.id})}"
-               onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?');">Eliminar</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<hr>
-<form th:action="@{/logout}" method="post" style="margin-top: 20px;">
-    <button type="submit">Cerrar sesión</button>
-</form>
-<p style="margin-top: 10px;"><a th:href="@{/}">Volver a Inicio</a></p>
-
-
 </body>
 </html>

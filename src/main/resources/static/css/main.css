@@ -1,0 +1,528 @@
+/* Definición de Variables de Color y Fuentes */
+:root {
+    /* Tonos Primarios (Morados) */
+    --color-primary-base: #933ae4;     /* Principal más oscuro, bueno para acciones/links */
+    --color-primary-active: #a153e7;
+    --color-primary-medium: #ae6beb;   /* Un tono medio versátil */
+    --color-primary-light: #bc84ee;
+    --color-primary-lighter: #c99df1;
+    --color-primary-highlight: #d7b5f5; /* Para fondos suaves o acentos */
+    --color-primary-bg-soft: #e4cef8;
+    --color-primary-bg-ultrasoft: #f2e6fc;
+
+    /* Complementarios */
+    --color-accent-green: #a8ed23;    /* Para llamadas a la acción importantes o alertas positivas */
+    --color-neutral-dark: #232323;    /* Para texto principal, bordes oscuros */
+    --color-neutral-medium: #555555;  /* Texto secundario o gris medio */
+    --color-neutral-lightgray: #cccccc; /* Bordes claros, divisores */
+    --color-neutral-bg: #f8f9fa;      /* Fondo general de página (un gris muy claro) */
+    --color-neutral-white: #ffffff;   /* Para fondos de tarjetas, texto sobre fondos oscuros */
+
+    /* Fuentes */
+    --font-text: 'Nunito', sans-serif;
+    --font-titles: 'Russo One', cursive; /* Google Fonts a veces sugiere 'cursive' o 'sans-serif' como fallback */
+
+    /* Tamaños de fuente base */
+    --font-size-base: 16px;
+    --font-size-h1: 2.5rem; /* ej. 40px si base es 16px */
+    --font-size-h2: 2rem;   /* ej. 32px */
+    --font-size-h3: 1.75rem;/* ej. 28px */
+    --font-size-small: 0.9rem;
+
+    /* Otros */
+    --border-radius-base: 8px;
+    --box-shadow-base: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+/* Estilos Globales Base */
+body {
+    font-family: var(--font-text);
+    font-size: var(--font-size-base);
+    font-weight: 400; /* Peso normal para Nunito */
+    line-height: 1.6;
+    color: var(--color-neutral-dark);
+    background-color: var(--color-neutral-bg);
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-titles);
+    color: var(--color-primary-base); /* Títulos con el color primario oscuro */
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    line-height: 1.2;
+}
+
+h1 { font-size: var(--font-size-h1); }
+h2 { font-size: var(--font-size-h2); }
+h3 { font-size: var(--font-size-h3); }
+
+a {
+    color: var(--color-primary-active);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--color-primary-darkest); /* Un poco más oscuro al pasar el mouse */
+    text-decoration: underline;
+}
+
+button {
+    font-family: var(--font-text); /* Los botones también usarán Nunito por defecto */
+    cursor: pointer;
+}
+
+/* Contenedor general para centrar contenido y dar padding */
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Alertas (si las usamos consistentemente) */
+.alert {
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-base);
+    font-size: 1em;
+}
+.alert-success {
+    color: #0f5132; /* Podríamos usar un color de nuestra paleta aquí */
+    background-color: #d1e7dd; /* Podríamos usar un color de nuestra paleta aquí */
+    border-color: #badbcc;
+}
+.alert-danger {
+    color: #842029; /* Podríamos usar un color de nuestra paleta aquí */
+    background-color: #f8d7da; /* Podríamos usar un color de nuestra paleta aquí */
+    border-color: #f5c2c7;
+}
+
+/* Puedes añadir más estilos base o utilidades aquí */
+
+/* Estilos de la tienda, las cards, etc */
+
+/* Cuadrícula para las tarjetas de producto */
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px; /* Espacio entre las tarjetas */
+    justify-content: center; /* Centra las tarjetas si no ocupan toda la fila */
+    padding: 20px 0; /* Un poco de espacio arriba y abajo de la cuadrícula */
+}
+
+/* Estilos para cada tarjeta de producto */
+.product-card {
+    background-color: var(--color-neutral-white);
+    border: 1px solid var(--color-neutral-lightgray); /* Borde sutil */
+    border-radius: var(--border-radius-base);
+    padding: 20px;
+    flex-basis: 280px; /* Ancho base de la tarjeta, crecerá si hay espacio */
+    flex-grow: 1;
+    max-width: 320px; /* Ancho máximo para que no se hagan demasiado grandes */
+    box-shadow: var(--box-shadow-base);
+    display: flex;
+    flex-direction: column; /* Para alinear contenido verticalmente */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1); /* Sombra más pronunciada al pasar el mouse */
+    transform: translateY(-5px); /* Efecto de "levantar" la tarjeta */
+}
+
+/* Si decides añadir imágenes a los productos en el futuro */
+.product-card img {
+    width: 100%; /* La imagen ocupa todo el ancho de la tarjeta */
+    height: 180px; /* Altura fija para la imagen */
+    object-fit: cover; /* Asegura que la imagen cubra el espacio sin deformarse */
+    border-radius: calc(var(--border-radius-base) - 4px); /* Radio un poco menor que la tarjeta */
+    margin-bottom: 15px;
+}
+
+/* Nombre del Producto */
+.product-card h3 {
+    font-family: var(--font-text); /* Nunito */
+    font-weight: 700; /* Bold (Negrita) */
+    font-size: 1.2rem; /* Tamaño de fuente para el nombre del producto */
+    color: var(--color-primary-base); /* Usamos el color primario principal */
+    margin-top: 0;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+/* Si el nombre del producto es un enlace */
+.product-card h3 a {
+    color: inherit; /* Hereda el color del h3 (nuestro color primario) */
+    text-decoration: none;
+}
+.product-card h3 a:hover {
+    color: var(--color-primary-active); /* Un tono de morado ligeramente diferente al pasar el mouse */
+}
+
+/* Descripción del Producto */
+.product-card .product-description { /* Añadiremos esta clase en el HTML */
+    font-family: var(--font-text);
+    font-size: 0.9rem; /* Un poco más pequeño que el texto base */
+    color: var(--color-neutral-medium);
+    flex-grow: 1; /* Hace que este elemento ocupe el espacio disponible, empujando lo de abajo */
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+/* Precio del Producto */
+.product-card .price {
+    font-family: var(--font-text);
+    font-weight: 700; /* Negrita para el precio */
+    color: var(--color-neutral-dark);
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+/* Stock del Producto */
+.product-card .stock {
+    font-family: var(--font-text);
+    font-size: var(--font-size-small);
+    color: var(--color-neutral-medium);
+    margin-bottom: 15px;
+}
+
+/* Botón "Añadir al Carrito" */
+.product-card .add-to-cart-button {
+    font-family: var(--font-text);
+    font-weight: 600; /* Semibold */
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: var(--color-primary-active); /* Un tono de morado */
+    color: var(--color-neutral-white);
+    text-align: center;
+    border-radius: calc(var(--border-radius-base) / 2); /* Bordes redondeados */
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-top: auto; /* Asegura que el botón se alinee al final de la tarjeta si las descripciones varían en altura */
+    transition: background-color 0.2s ease;
+}
+
+.product-card .add-to-cart-button:hover {
+    background-color: var(--color-primary-base); /* Morado más oscuro al pasar el mouse */
+}
+
+/* Mensaje de "Agotado" */
+.product-card .out-of-stock {
+    font-family: var(--font-text);
+    color: #dc3545; /* Un rojo estándar para indicar "agotado" */
+    margin-top: auto;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: 600;
+}
+
+/*ALCH NO SE*/
+
+nav {
+    background-color: var(--color-neutral-white); /* Fondo blanco para la navegación */
+    padding: 15px 30px; /* Espaciado interno */
+    border-bottom: 1px solid var(--color-neutral-lightgray); /* Un borde inferior sutil */
+    display: flex;
+    justify-content: space-between; /* Separa los grupos de enlaces */
+    align-items: center; /* Centra verticalmente los ítems */
+    margin-bottom: 30px; /* Espacio debajo de la navegación */
+    box-shadow: var(--box-shadow-base); /* Una sombra suave */
+}
+
+nav .links-izquierda a,
+nav .links-derecha a {
+    font-family: var(--font-text); /* Nunito */
+    font-weight: 600; /* Un poco más de peso para los enlaces de navegación */
+    text-decoration: none;
+    color: var(--color-primary-base); /* Color primario para los enlaces */
+    margin-left: 20px; /* Espacio entre enlaces (en links-derecha) */
+    transition: color 0.2s ease;
+}
+
+nav .links-izquierda a:first-child {
+    margin-left: 0; /* El primer enlace a la izquierda no necesita margen izquierdo */
+}
+
+nav .links-derecha {
+    display: flex; /* Asegura que los ítems dentro de links-derecha también sean flexibles */
+    align-items: center; /* Centra verticalmente todos los ítems en links-derecha */
+}
+
+nav .links-derecha > * { /* Aplica a todos los hijos directos de .links-derecha */
+    margin-left: 15px; /* Espacio a la izquierda de cada elemento */
+}
+
+nav .links-derecha a:hover,
+nav .links-derecha form button:hover {
+    color: var(--color-primary-active); /* Un morado más vibrante al pasar el mouse */
+    text-decoration: none; /* Evitamos el subrayado por defecto de 'a:hover' si no lo queremos */
+}
+
+/* Estilo para el saludo al usuario */
+
+nav .links-derecha .user-greeting {
+    font-family: var(--font-text);
+    color: var(--color-neutral-medium);
+    font-weight: 600;
+    /* margin-left: 15px; ya cubierto por el selector general de arriba */
+}
+
+/* Enlace especial para "Gestionar Productos" del Admin */
+nav .links-derecha .admin-link a {
+    color: var(--color-accent-green); /* Verde lima para destacar */
+    font-weight: 700; /* Más destacado */
+}
+nav .links-derecha .admin-link a:hover {
+    color: #8cc01f; /* Un verde lima un poco más oscuro al pasar el mouse */
+}
+
+
+/* Formulario y botón de Cerrar Sesión */
+nav .links-derecha form {
+    display: inline; /* Para que esté en la misma línea */
+    margin: 0;
+    padding: 0;
+    margin-left: 20px;
+}
+
+nav .links-derecha form button {
+    font-family: var(--font-text);
+    font-weight: 600;
+    background: none;
+    border: none;
+    color: var(--color-primary-base); /* Mismo color que otros links para consistencia */
+    cursor: pointer;
+    padding: 0;
+    font-size: 1em; /* Mismo tamaño que los 'a' */
+    transition: color 0.2s ease;
+}
+/* No necesitamos un hover específico si es igual que 'a:hover' */
+
+/* Enlace de "Registrarse" */
+nav .links-derecha .register-link {
+    /* Si quieres un estilo particular para "Registrarse" */
+    /* Por ejemplo, podrías usar var(--color-primary-active) si quieres que destaque un poco */
+    /* O mantenerlo igual que los otros enlaces y se aplicará el estilo de nav .links-derecha a */
+}
+
+/* En main.css */
+
+/* Estilo base para botones en la NAV, si planeas tener más */
+.nav-button {
+    padding: 8px 18px; /* Más padding horizontal para aspecto de botón */
+    border-radius: var(--border-radius-base);
+    text-decoration: none;
+    font-weight: 700; /* Nunito Bold */
+    font-family: var(--font-text);
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    display: inline-block;
+    text-align: center;
+    font-size: 0.95em;
+    line-height: normal; /* Asegura que el texto esté bien alineado verticalmente */
+}
+
+/* Estilo específico para el botón "Unirme!" */
+.nav-button.register-button {
+    background-color: var(--color-accent-green); /* #a8ed23 */
+    color: var(--color-neutral-white); /* Texto blanco como solicitaste */
+    border: 1px solid var(--color-accent-green); /* Borde del mismo color o ligeramente más oscuro */
+}
+
+.nav-button.register-button:hover {
+    background-color: #8fc91e; /* Un verde lima un poco más oscuro para el hover */
+    color: var(--color-neutral-white); /* Mantenemos texto blanco */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/*ESTILOS DE AUTENTICACION Y REGISTRO*/
+/* En main.css */
+
+/* Estilos para el body de las páginas de autenticación */
+body.auth-body {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;    /* Centra verticalmente */
+    min-height: 100vh;       /* Ocupa toda la altura de la ventana */
+    background-color: var(--color-primary-bg-ultrasoft); /* Un fondo morado muy suave */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Contenedor para el formulario de autenticación */
+.auth-container {
+    background-color: var(--color-neutral-white);
+    padding: 30px 40px;
+    border-radius: var(--border-radius-base);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 420px; /* Ancho máximo del contenedor del formulario */
+    text-align: center; /* Centra el título y el link inferior */
+}
+
+.auth-container h1 {
+    font-family: var(--font-titles); /* Russo One */
+    color: var(--color-primary-base);
+    margin-bottom: 25px;
+    font-size: 2rem; /* Un poco más pequeño que el H1 de la tienda */
+}
+
+/* Estilos para los grupos de formulario */
+.auth-form .form-group {
+    margin-bottom: 20px;
+    text-align: left; /* Alinea labels e inputs a la izquierda */
+}
+
+.auth-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--font-text); /* Nunito */
+    font-weight: 600; /* Semibold */
+    color: var(--color-neutral-medium);
+    font-size: 0.95em;
+}
+
+.auth-form .form-group input[type="text"],
+.auth-form .form-group input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid var(--color-neutral-lightgray);
+    border-radius: calc(var(--border-radius-base) / 2);
+    font-family: var(--font-text); /* Nunito */
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-form .form-group input[type="text"]:focus,
+.auth-form .form-group input[type="password"]:focus {
+    outline: none;
+    border-color: var(--color-primary-active);
+    box-shadow: 0 0 0 3px var(--color-primary-bg-soft);
+}
+
+/* Botón de envío */
+.auth-form .button-submit { /* Usaremos la clase .button-submit que ya tenías en registro.html */
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-primary-base);
+    color: var(--color-neutral-white);
+    border: none;
+    border-radius: calc(var(--border-radius-base) / 2);
+    cursor: pointer;
+    font-family: var(--font-text); /* Nunito */
+    font-size: 1.1em;
+    font-weight: 700; /* Bold */
+    transition: background-color 0.3s;
+    margin-top: 10px; /* Espacio antes del botón */
+}
+
+.auth-form .button-submit:hover {
+    background-color: var(--color-primary-active);
+}
+
+/* Mensajes de autenticación (error, logout) */
+.auth-message {
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: calc(var(--border-radius-base) / 2);
+    font-family: var(--font-text);
+    font-size: 0.95em;
+    text-align: center;
+}
+.auth-message.error {
+    background-color: #f8d7da; /* Error: rojo claro de Bootstrap */
+    color: var(--color-neutral-dark); /* Texto oscuro para contraste */
+    border: 1px solid #f5c6cb;
+}
+.auth-message.success {
+    background-color: #d1e7dd; /* Éxito: verde claro de Bootstrap */
+    color: var(--color-neutral-dark);
+    border: 1px solid #badbcc;
+}
+
+/* Enlaces inferiores (ej. "¿No tienes cuenta?") */
+.auth-links {
+    text-align: center;
+    margin-top: 25px;
+    font-family: var(--font-text);
+    font-size: 0.95em;
+}
+.auth-links p {
+    margin-bottom: 5px;
+    color: var(--color-neutral-medium);
+}
+.auth-links a {
+    color: var(--color-primary-base);
+    font-weight: 600;
+    text-decoration: none;
+}
+.auth-links a:hover {
+    text-decoration: underline;
+    color: var(--color-primary-active);
+}
+
+/* Cambios a la nav bar */
+nav .links-izquierda a.navbar-brand {
+    font-family: var(--font-titles); /* Russo One */
+    font-size: 1.6em; /* Tamaño más grande, ajusta según tu gusto */
+    color: var(--color-primary-base); /* Color primario principal */
+    font-weight: normal; /* Russo One ya es bastante bold por sí misma */
+    margin-right: 25px; /* Más espacio si es el "logo" o título principal */
+}
+
+nav .links-izquierda a.navbar-brand:hover {
+    color: var(--color-primary-active); /* Un morado más vibrante al pasar el mouse */
+}
+
+/* Carrito*/
+.nav-cart-link {
+    display: flex;
+    align-items: center;
+    position: relative; /* Para el posicionamiento del contador si se hace tipo badge */
+    color: var(--color-primary-base); /* Asegura que el icono y texto hereden este color */
+}
+
+.nav-cart-link .cart-icon {
+    stroke: var(--color-primary-base); /* El SVG usa 'stroke', así que lo coloreamos aquí */
+    /* fill: none; ya está en el SVG */
+    margin-right: 4px; /* Espacio entre el icono y el contador */
+    transition: stroke 0.2s ease;
+}
+
+.nav-cart-link:hover .cart-icon {
+    stroke: var(--color-primary-active);
+}
+.nav-cart-link:hover .cart-item-count { /* Para que el contador también cambie de color con el hover del enlace */
+    color: var(--color-primary-active);
+}
+
+.nav-cart-link .cart-item-count {
+    font-family: var(--font-text);
+    font-size: 0.9em;
+    font-weight: 600;
+    /* Estilos opcionales para hacerlo parecer un badge pequeño: */
+    background-color: var(--color-accent-green); */
+    color: var(--color-neutral-white); */
+    padding: 1px 5px; */
+    border-radius: 8px; */
+    margin-left: -5px; */ /* Para superponer un poco si es un badge */
+    position: relative; top: -8px; */ /* Para posicionar como badge */
+}
+
+/* En main.css - para accesibilidad */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
