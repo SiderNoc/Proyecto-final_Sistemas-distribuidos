@@ -301,7 +301,6 @@ nav .links-derecha form button {
     font-size: 1em; /* Mismo tamaño que los 'a' */
     transition: color 0.2s ease;
 }
-/* No necesitamos un hover específico si es igual que 'a:hover' */
 
 /* Enlace de "Registrarse" */
 nav .links-derecha .register-link {
